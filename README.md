@@ -3,7 +3,7 @@
 原名应该叫做: no ui
 
 类似 vueuse
-通过使用 useXXX 对常见组件需要使用到的交互进行疯狂
+通过使用 useXXX 对常见组件需要使用到的交互进行封装
 例如: useSelect useOption useDropdown 等
 
 目前社区中存在很棒的组件库，UI设计也非常棒
