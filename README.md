@@ -1,6 +1,6 @@
 # NOI
 
-原名应该叫做: no ui (为什么交noi而不是noui，是因为noi比较顺手)
+原名应该叫做: no ui (为什么叫noi而不是noui，是因为noi比较顺手)
 
 类似 vueuse
 通过使用 useXXX 对常见组件需要使用到的交互进行封装
