@@ -1,19 +1,7 @@
-# NOI
+# Vue 3 + Vite
 
-原名应该叫做: no ui (为什么叫noi而不是noui，是因为noi比较顺手)
+This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
-类似 vueuse
-通过使用 useXXX 对常见组件需要使用到的交互进行封装
-例如: useSelect useOption useDropdown 等
+## Recommended IDE Setup
 
-目前社区中存在很棒的组件库，UI设计也非常棒
-例如移动端的 vant，桌面端的 element-plus
-
-但在实际业务开发中（尤其是移动端），虽然已经使用了组件库，但我们往往会在其基础上大改样式，以便能符合设计师的UI
-（个人认为直接应用组件库提供的样式，毫不修改基本上是一种理想情况，实际开发中很难保持）
-
-另外，对于样式的处理，社区中已经有非常成熟的css框架，例如 tailwind css
-
-NOI 希望保留组件库的交互能力，并且允许开发者自行实现 DOM 和 css 的形式实现更贴合业务的 无UI 组件库
-
-目前，本项目正在构思中
+- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
