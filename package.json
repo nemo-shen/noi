@@ -1,17 +1,22 @@
 {
-  "name": "noi",
+  "name": "@noi/workspaces",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@noi/core": "workspace:*",
     "vue": "^3.3.11"
   },
   "devDependencies": {
+    "@types/node": "^20.10.6",
     "@vitejs/plugin-vue": "^4.5.2",
     "vite": "^5.0.8"
   }
