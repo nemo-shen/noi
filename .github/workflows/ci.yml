@@ -15,10 +15,10 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        run: corepack enable
 
       - name: Set node version to ${{ matrix.node }}
         uses: actions/setup-node@v3
@@ -26,10 +26,7 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: pnpm
 
-      - name: Setup
-        run: npm i -g pnpm
-
-      - name: Install
+      - name: Install dependencies
         run: pnpm install
 
       - name: Test
