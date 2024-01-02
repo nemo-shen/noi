@@ -1,23 +1,17 @@
 interface UseToastOptions {
-  duration?: number;
+  duration?: number
 }
 interface OpenOptions {
-  message: string;
+  message: string
 }
-export const useToast = (source, options: UseToastOptions = {}) => {
-  const close = () => {
 
-  };
-  const open = (options: OpenOptions | string) => {
-    const a = 1;
-  };
+export const useToast = (source, _options: UseToastOptions = {}) => {
+  const close = () => {}
+  const open = (_openOptions: OpenOptions | string) => {}
   return {
     open,
     close,
-
-  };
-};
-
-export function sum(a, b) {
-  return a + b;
+  }
 }
+
+export const sum = (a, b) => a + b
