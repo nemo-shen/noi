@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import { useToast } from '@noi/core'
 console.log('useToast', useToast);
 
-
 defineProps({
   msg: String
 })

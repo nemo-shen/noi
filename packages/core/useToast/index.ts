@@ -1,10 +1,10 @@
 interface UseToastOptions {
-  duration: number;
+  duration?: number;
 }
 interface OpenOptions {
   message: string;
 }
-export const useToast = (source, options: UseToastOptions) => {
+export const useToast = (source, options: UseToastOptions = {}) => {
   const close = () => {
 
   }
@@ -16,4 +16,8 @@ export const useToast = (source, options: UseToastOptions) => {
     close,
 
   }
+}
+
+export function sum(a, b) {
+  return a + b;
 }
