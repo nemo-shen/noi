@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@noi/core": "workspace:*",
-    "vue": "^3.3.11"
+    "vue": "^3.4.5"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
