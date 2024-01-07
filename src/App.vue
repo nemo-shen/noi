@@ -1,7 +1,9 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import Usetoast from './components/UseToast.vue'
+import { Toast } from './components/UseToast2.tsx'
 </script>
 
 <template>
-  <HelloWorld msg="Hello Vue 3 + Vite" />
+  <Usetoast />
+  <Toast />
 </template>
