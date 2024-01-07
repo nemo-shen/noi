@@ -2,13 +2,13 @@ import { ref, type Ref, createApp, Component, isVNode } from 'vue'
 
 interface UseToastOptions {
   duration?: number
+  root?: Component
 }
 
 interface OpenOptions {
   content?: string | Component
 }
 
-// toast stack
 const stack = new Set()
 
 const createInstance = () => {
@@ -48,6 +48,8 @@ const getInstance = () => {
   return stack.values().next().value
 }
 
+export const unuse = () => {}
+
 /**
  * ```js
  * mountRootComponent({ setup() {} })
@@ -65,13 +67,10 @@ const getInstance = () => {
  * open(options)
  * open(Component)
  */
-export const useToast = (
-  _options: UseToastOptions = {}
-) => {
+export const useToast = (_options: UseToastOptions = {}) => {
   const { open, close } = getInstance()
   return {
     open,
     close,
   }
 }
-export const sum = (a, b) => a + b

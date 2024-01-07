@@ -5,6 +5,9 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 
 export default defineConfig({
   plugins: [vue(), vueJsx()],
+  test: {
+    environment: 'happy-dom'
+  },
   resolve: {
     alias: {
       "@noi/core": resolve(__dirname, "packages/core/index.ts"),
