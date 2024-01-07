@@ -2,6 +2,29 @@
 
 NOI is a hight performance/light weight headless UI library.
 
+Your can easily use it to create your own UI library.
+
+For example, if you want to create a toast component and via a function to open it.
+Your just focus on your UI and logic, and then use NOI to implement the function:
+
+```ts
+<script setup lang="ts">
+import { useToast } from '@noi/core'
+
+const { open } = useToast()
+const openToast = () => {
+  open(h('div', { class: 'my-class-name' }, 'hello world'))
+}
+</script>
+```
+
+```html
+<template>
+  <button @click="open('hello world')">show toast</button>
+  <button @click="openToast">show toast with node</button>
+</template>
+```
+
 原名应该叫做: no ui (为什么叫noi而不是noui，是因为noi比较顺手)
 
 类似 vueuse
