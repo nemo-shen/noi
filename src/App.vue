@@ -1,9 +1,23 @@
-<script setup>
-import Usetoast from './components/UseToast.vue'
-import { Toast } from './components/UseToast2.tsx'
+<script setup lang="ts">
+import { h, ref } from 'vue'
+import { useToast } from '@noi/core'
+
+const { open, close } = useToast()
+const openNodeContent = () => {
+  open(h('div', { class: 'nemo' }, 'hello world'))
+}
 </script>
 
 <template>
-  <Usetoast />
-  <Toast />
+  <button @click="open('abc')">open abc</button>
+  <button @click="open('nemo')">open nemo</button>
+  <button @click="openNodeContent">open node content</button>
+  <button @click="close()">close</button>
 </template>
+
+
+<style>
+.nemo {
+  color: red;
+}
+</style>
