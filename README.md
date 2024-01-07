@@ -1,5 +1,7 @@
 # NOI
 
+NOI is a hight performance/light weight headless UI library.
+
 原名应该叫做: no ui (为什么叫noi而不是noui，是因为noi比较顺手)
 
 类似 vueuse
