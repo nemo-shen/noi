@@ -1,2 +1,2 @@
-export * from './useToast';
+export * from './useToast'
 export * from './useEllipsis'
