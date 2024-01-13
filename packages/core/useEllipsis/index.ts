@@ -69,12 +69,13 @@ const calcEllipsisText = (
   sourceContent: string,
   ellipsisText: string,
   position: EllipsisPosition,
-  actionNode: VNode
+  actionNode: VNode,
+  rows: number
 ) => {
   const node = clone.dupNode
 
   const style = window.getComputedStyle(node)
-  const lineHeight = parseFloat(style.lineHeight)
+  const lineHeight = parseFloat(style.lineHeight) * rows
   // 先把 ellipsisText 放到node中进行试算，那么我们就能知道我们至少要留多少空间给ellipsisText，也就是说
 
   function calc(content: string, res = '', tail = '') {
@@ -155,7 +156,7 @@ const calcEllipsisText = (
     res = withAction(res)
   }
 
-  // clone.unmount()
+  clone.unmount()
   return res
 }
 
@@ -189,7 +190,8 @@ export const useEllipsis = (
       options.content.value,
       options.ellipsisText,
       options.position,
-      options.action ? options.action({ state, toggle }) : undefined
+      options.action ? options.action({ state, toggle }) : undefined,
+      options.rows
     )
   })
 
