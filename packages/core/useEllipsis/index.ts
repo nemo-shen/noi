@@ -96,7 +96,7 @@ const calcEllipsisText = (
     const remain = content.slice(half.length)
 
     node.innerText = `${res}${half}`
-    if (node.clientHeight > lineHeight) {
+    if (node.offsetHeight > lineHeight) {
       node.innerText = res
       return calc(half, res, tail ?? remain)
     }
@@ -117,7 +117,7 @@ const calcEllipsisText = (
         node.innerText = content + ellipsisText
         break
     }
-    if (node.clientHeight > lineHeight) {
+    if (node.offsetHeight > lineHeight) {
       return withEllipsisText(newContent)
     }
     return node.innerText
@@ -128,7 +128,7 @@ const calcEllipsisText = (
     const dummyNode = document.createElement('div')
     render(actionNode, dummyNode)
     node.appendChild(dummyNode.firstChild)
-    if (node.clientHeight > lineHeight) {
+    if (node.offsetHeight > lineHeight) {
       let newContent
       switch (position) {
         case EllipsisPosition.Start:
@@ -186,6 +186,7 @@ export const useEllipsis = (
   }
 
   const reCalculate = () => {
+    if (!source.value) return
     clone.value = useCloneElement(source.value)
     ellipsisContent.value = calcEllipsisText(
       clone.value,
@@ -200,7 +201,6 @@ export const useEllipsis = (
   onMounted(reCalculate)
 
   const { width } = useWindowSize()
-
   watch([width, options.content, source], reCalculate)
 
   const content = computed(() =>
