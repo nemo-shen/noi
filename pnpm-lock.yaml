@@ -46,8 +46,8 @@ importers:
         specifier: ^9.1.0
         version: 9.1.0(eslint@7.32.0)
       eslint-plugin-vue:
-        specifier: ^9.20.0
-        version: 9.20.0(eslint@7.32.0)
+        specifier: ^9.20.1
+        version: 9.20.1(eslint@7.32.0)
       happy-dom:
         specifier: ^12.10.3
         version: 12.10.3
@@ -2042,8 +2042,8 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-vue@9.20.0(eslint@7.32.0):
-    resolution: {integrity: sha512-9/DV5CM7ItfgWmXjL6j3zyDtVTrslYdnEm+rnYNajdElx17b3erxi/Wc6FY7t3BQ6dgo0t/UBpgiWCOKtJyN8Q==}
+  /eslint-plugin-vue@9.20.1(eslint@7.32.0):
+    resolution: {integrity: sha512-GyCs8K3lkEvoyC1VV97GJhP1SvqsKCiWGHnbn0gVUYiUhaH2+nB+Dv1uekv1THFMPbBfYxukrzQdltw950k+LQ==}
     engines: {node: ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.2.0 || ^7.0.0 || ^8.0.0
