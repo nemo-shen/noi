@@ -1,4 +1,12 @@
-import { ref, type Ref, VNode, nextTick, computed, ComputedRef } from 'vue'
+import {
+  ref,
+  type Ref,
+  render,
+  type VNode,
+  nextTick,
+  computed,
+  ComputedRef,
+} from 'vue'
 
 export enum EllipsisPosition {
   Start = 'start',
@@ -15,7 +23,7 @@ interface UseEllipsisOptions {
   rows?: number // 同组件 prop default: 1
   ellipsisText?: string // 同组件 prop default: '...'
   position?: EllipsisPosition // 同组件 prop default 'end'
-  action?: boolean | VNode // 操作 false = 不需要 true 表示使用默认的，即 展开 | 折叠，VNode则表示自定义slot 传入之后会被计算到字符中
+  action?: (payload: { state: Ref<EllipsisState>; toggle: Function }) => VNode // 操作 VNode则表示自定义slot 传入之后会被计算到字符中
 }
 interface UseEllipsisReturn {
   content: ComputedRef<string> // 省略后的内容
@@ -60,7 +68,8 @@ const calcEllipsisText = (
   clone: UseCloneElementReturn,
   sourceContent: string,
   ellipsisText: string,
-  position: EllipsisPosition
+  position: EllipsisPosition,
+  actionNode: VNode
 ) => {
   const node = clone.dupNode
 
@@ -111,11 +120,42 @@ const calcEllipsisText = (
     return node.innerText
   }
 
+  function withAction(content: string) {
+    node.innerText = content
+    const dummyNode = document.createElement('div')
+    render(actionNode, dummyNode)
+    node.appendChild(dummyNode.firstChild)
+    if (node.clientHeight > lineHeight) {
+      let newContent
+      switch (position) {
+        case EllipsisPosition.Start:
+          newContent = ellipsisText + content.slice(1 + ellipsisText.length)
+          break
+        case EllipsisPosition.End:
+          newContent =
+            content.slice(0, content.length - 1 - ellipsisText.length) +
+            ellipsisText
+          break
+        default:
+          newContent =
+            content.slice(0, content.length - 1 - ellipsisText.length) +
+            ellipsisText
+          break
+      }
+      return withAction(newContent)
+    }
+    return content
+  }
+
   let res = calc(sourceContent)
   if (ellipsisText.length !== 0) {
     res = withEllipsisText(res)
   }
-  clone.unmount()
+  if (actionNode) {
+    res = withAction(res)
+  }
+
+  // clone.unmount()
   return res
 }
 
@@ -123,7 +163,6 @@ const defaultUseEllipsisOptions = {
   rows: 1,
   ellipsisText: '...',
   position: EllipsisPosition.End,
-  action: false,
 }
 
 export const useEllipsis = (
@@ -136,22 +175,23 @@ export const useEllipsis = (
   const state = ref(EllipsisState.Collapsed)
   const clone = ref<UseCloneElementReturn>()
 
-  nextTick(() => {
-    clone.value = useCloneElement(target.value)
-    ellipsisContent.value = calcEllipsisText(
-      clone.value,
-      options.content.value,
-      options.ellipsisText,
-      options.position
-    )
-  })
-
   const toggle = () => {
     state.value =
       state.value === EllipsisState.Collapsed
         ? EllipsisState.Expanded
         : EllipsisState.Collapsed
   }
+
+  nextTick(() => {
+    clone.value = useCloneElement(target.value)
+    ellipsisContent.value = calcEllipsisText(
+      clone.value,
+      options.content.value,
+      options.ellipsisText,
+      options.position,
+      options.action ? options.action({ state, toggle }) : undefined
+    )
+  })
 
   const content = computed(() =>
     state.value === EllipsisState.Collapsed
