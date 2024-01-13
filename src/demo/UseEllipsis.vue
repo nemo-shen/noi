@@ -19,7 +19,7 @@ const renderButton = () => {
 }
 const { content, state, toggle } = useEllipsis(ellipsisRef, {
   content: sourceContent,
-  position: EllipsisPosition.End,
+  position: EllipsisPosition.Start,
   ellipsisText: '...',
 })
 </script>
