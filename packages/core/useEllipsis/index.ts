@@ -1,41 +1,78 @@
-import { ref, watchEffect, type Ref } from 'vue'
+import { ref, type Ref, VNode, nextTick, computed, ComputedRef } from 'vue'
+
+export enum EllipsisPosition {
+  Start = 'start',
+  Middle = 'middle',
+  End = 'end',
+}
+
+export enum EllipsisState {
+  Expanded = 'expanded',
+  Collapsed = 'collapsed',
+}
 
 interface UseEllipsisOptions {
+  content: Ref<string> // 同组件 prop
   rows?: number // 同组件 prop default: 1
-  content: string // 同组件 prop
-  dots?: string // 同组件 prop default: '...'
-  position?: 'start' | 'middle' | 'end' // 同组件 prop default 'end'
+  ellipsisText?: string // 同组件 prop default: '...'
+  position?: EllipsisPosition // 同组件 prop default 'end'
+  action?: boolean | VNode // 操作 false = 不需要 true 表示使用默认的，即 展开 | 折叠，VNode则表示自定义slot 传入之后会被计算到字符中
 }
 interface UseEllipsisReturn {
-  content: string // 省略后的内容
-  state: 'expand' | 'collapse' // 当前状态
-  toggle: Function // 切换状态
+  content: ComputedRef<string> // 省略后的内容
+  state: EllipsisState // 当前状态
+  toggle: (e: MouseEvent) => void // 切换状态
 }
 
-function test() {
-  const source =
-    '擁擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！擁有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！有正確的座lwjeflwejf右銘，可以幫10230123助你改變心態，自信迎接新的一天，比前一天更好。座右銘能改變你的生活。將勵志名言納入內容，作為文案，用這些金句激勵讀者。讓名言成為你的引領，展翅高飛！'
-  const lineHeight = 16
+interface UseCloneElementReturn {
+  dupNode: HTMLElement
+  unmount: Function
+}
 
-  const div = document.createElement('div')
-  // const width = div.style.setProperty('width', `${width}px`)
-  div.style.setProperty('line-height', `${lineHeight}px`)
-  document.body.appendChild(div)
+/**
+ * 存放省略内容的容器需要是一个没有其他元素的干净容器，如果需要在内部增加action，可以通过action option 增加
+ * 如果需要控制省略位置可以通过 postion option 控制 'left' | 'center' | 'right'(default)
+ * 如果需要控制省略符号可以通过 ellipsisText: '...' default
+ * @param source
+ */
+const useCloneElement = (source: HTMLElement): UseCloneElementReturn => {
+  const dupNode = source.cloneNode(false) as HTMLElement
 
-  let i = 0
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  /**
-   * 有一个空间，和一个字符串，请问最多能放多少个字符
-   * @param content
-   */
+  const computedStyle = window.getComputedStyle(source)
+
+  const keys = Array.from(computedStyle)
+  keys.forEach((key) => {
+    dupNode.style.setProperty(key, computedStyle.getPropertyPriority(key))
+  })
+
+  document.body.appendChild(dupNode)
+
+  const unmount = () => {
+    document.body.removeChild(dupNode)
+  }
+
+  return {
+    dupNode,
+    unmount,
+  }
+}
+
+const calcEllipsisText = (
+  clone: UseCloneElementReturn,
+  sourceContent: string
+) => {
+  const node = clone.dupNode
+
   function calc(content: string, res = '', tail = '') {
-    i++
-    console.log(res, '|', content, '|', tail, '|', i)
     if (content.length === 0) return res
+
+    const style = window.getComputedStyle(node)
+    const lineHeight = parseFloat(style.lineHeight)
+
     if (content.length === 1) {
-      div.innerText = `${res}${content}`
-      if (div.clientHeight > lineHeight) {
-        div.innerText = res
+      node.innerText = `${res}${content}`
+      if (node.clientHeight > lineHeight) {
+        node.innerText = res
         return res
       }
       return `${res}${content}`
@@ -44,59 +81,46 @@ function test() {
     const half = content.slice(0, content.length / 2)
     const remain = content.slice(half.length)
 
-    div.innerText = `${res}${half}`
-    if (div.clientHeight > lineHeight) {
-      div.innerText = res
+    node.innerText = `${res}${half}`
+    if (node.clientHeight > lineHeight) {
+      node.innerText = res
       return calc(half, res, tail ?? remain)
     }
     return calc(remain + tail, res + half, '')
   }
-
-  const res = calc(source)
-  console.log(res)
-}
-test()
-const fontSize = ref<number>(1)
-const end = ref<number>(0)
-const cloneElement = (target: HTMLElement): HTMLElement => {
-  const originStyle = window.getComputedStyle(target)
-  const container = document.createElement('div')
-  const styleNames: string[] = Array.prototype.slice.apply(originStyle)
-  styleNames.forEach((name) => {
-    container.style.setProperty(name, originStyle.getPropertyValue(name))
-  })
-
-  container.style.position = 'fixed'
-  container.style.zIndex = '-9999'
-  container.style.top = '-9999px'
-  container.style.height = 'auto'
-  container.style.minHeight = 'auto'
-  container.style.maxHeight = 'auto'
-  document.body.appendChild(container)
-
-  fontSize.value = parseFloat(container.style.getPropertyValue('font-size'))
-  end.value = container.clientWidth / fontSize.value
-
-  return container
+  const res = calc(sourceContent)
+  clone.unmount()
+  return res
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export const useEllipsis = (
   target: Ref<HTMLElement>,
   options: UseEllipsisOptions
 ): UseEllipsisReturn => {
-  // const { width } = useWindowSize()
-  watchEffect(() => {
-    if (target.value) {
-      const cloneTarget = cloneElement(target.value)
-      cloneTarget.innerText = options.content
-    }
+  const ellipsisContent = ref('')
+  const state = ref(EllipsisState.Collapsed)
+  const clone = ref<UseCloneElementReturn>()
+
+  nextTick(() => {
+    clone.value = useCloneElement(target.value)
+    ellipsisContent.value = calcEllipsisText(clone.value, options.content.value)
   })
 
-  const toggle = () => {}
+  const toggle = () => {
+    state.value =
+      state.value === EllipsisState.Collapsed
+        ? EllipsisState.Expanded
+        : EllipsisState.Collapsed
+  }
+
+  const content = computed(() =>
+    state.value === EllipsisState.Collapsed
+      ? ellipsisContent.value
+      : options.content.value
+  )
   return {
-    content: options.content.slice(0, 24),
-    state: 'collapse',
+    content,
+    state: EllipsisState.Collapsed,
     toggle,
   }
 }
