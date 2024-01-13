@@ -3,7 +3,7 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@noi/core": ["./packages/core/index.ts"],
+      "@noi/core": ["./packages/core/index.ts"]
     }
   }
 }

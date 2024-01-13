@@ -2,3 +2,5 @@ src
 node_modules
 dist
 .eslint*
+
+README.md

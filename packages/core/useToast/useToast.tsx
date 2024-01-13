@@ -22,7 +22,6 @@ const createInstance = () => {
           message.value = options
         } else if (options.content) {
           message.value = options.content
-          console.log('message', message.value)
         }
       }
       const close = () => {
@@ -47,8 +46,6 @@ const getInstance = () => {
   }
   return stack.values().next().value
 }
-
-export const unuse = () => {}
 
 /**
  * ```js

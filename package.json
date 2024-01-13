@@ -12,7 +12,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "format": "prettier -w ."
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm exec lint-staged"

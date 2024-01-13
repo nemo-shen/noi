@@ -19,6 +19,7 @@ module.exports = {
   },
   plugins: ['vue', '@typescript-eslint', 'markdown'],
   rules: {
+    'import/prefer-default-export': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'import/no-extraneous-dependencies': [
       'error',
@@ -30,11 +31,17 @@ module.exports = {
   settings: {
     'import/resolver': {
       node: {
-        extensions: ['.ts'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.vue'],
       },
     },
   },
   overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      parserOptions: {
+        project: ['./tsconfig.json'],
+      },
+    },
     {
       files: ['*.md'],
       processor: 'markdown/markdown',
