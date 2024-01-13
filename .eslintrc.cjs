@@ -17,7 +17,7 @@ module.exports = {
     sourceType: 'module',
     project: './tsconfig.json',
   },
-  plugins: ['vue', '@typescript-eslint'],
+  plugins: ['vue', '@typescript-eslint', 'markdown'],
   rules: {
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'import/no-extraneous-dependencies': [
@@ -34,4 +34,10 @@ module.exports = {
       },
     },
   },
+  overrides: [
+    {
+      files: ['*.md'],
+      processor: 'markdown/markdown',
+    },
+  ],
 }

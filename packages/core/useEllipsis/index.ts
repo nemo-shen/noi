@@ -3,10 +3,12 @@ import {
   type Ref,
   render,
   type VNode,
-  nextTick,
+  watch,
   computed,
   ComputedRef,
+  onMounted,
 } from 'vue'
+import { useWindowSize } from '@vueuse/core'
 
 export enum EllipsisPosition {
   Start = 'start',
@@ -167,7 +169,7 @@ const defaultUseEllipsisOptions = {
 }
 
 export const useEllipsis = (
-  target: Ref<HTMLElement>,
+  source: Ref<HTMLElement>,
   options: UseEllipsisOptions
 ): UseEllipsisReturn => {
   // eslint-disable-next-line no-param-reassign
@@ -183,8 +185,8 @@ export const useEllipsis = (
         : EllipsisState.Collapsed
   }
 
-  nextTick(() => {
-    clone.value = useCloneElement(target.value)
+  const reCalculate = () => {
+    clone.value = useCloneElement(source.value)
     ellipsisContent.value = calcEllipsisText(
       clone.value,
       options.content.value,
@@ -193,7 +195,13 @@ export const useEllipsis = (
       options.action ? options.action({ state, toggle }) : undefined,
       options.rows
     )
-  })
+  }
+
+  onMounted(reCalculate)
+
+  const { width } = useWindowSize()
+
+  watch([width, options.content, source], reCalculate)
 
   const content = computed(() =>
     state.value === EllipsisState.Collapsed

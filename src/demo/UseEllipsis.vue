@@ -20,16 +20,14 @@ const renderButton = (_this) =>
   )
 const { content, state, toggle } = useEllipsis(ellipsisRef, {
   content: sourceContent,
-  position: EllipsisPosition.End,
-  ellipsisText: '...',
-  rows: 3,
 })
 </script>
 
 <template>
-  <span class="ellipsis" ref="ellipsisRef">
+  <input v-model="sourceContent" type="text" />
+  <div class="ellipsis" ref="ellipsisRef">
     {{ content }}
-  </span>
+  </div>
   <button @click="toggle">
     {{ state === 'expanded' ? 'Collapsed' : 'Expanded' }}
   </button>
@@ -37,8 +35,8 @@ const { content, state, toggle } = useEllipsis(ellipsisRef, {
 
 <style>
 .ellipsis {
-  display: inline-block;
-  width: 200px;
+  /* display: inline-block; */
+  /* width: 200px; */
   font-size: 22px;
   line-height: 32px;
 }
