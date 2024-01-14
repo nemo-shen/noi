@@ -8,7 +8,7 @@ export interface UseProgressOptions {
   autoIncrementRules?: AutoIncrementRule[]
 }
 
-interface AutoIncrementRule {
+export interface AutoIncrementRule {
   before: number // 多少进度之前
   increment: number // 自动增长幅度，默认 1
   delay: number // 延迟多久
