@@ -1,6 +1,6 @@
 # NOI
 
-[![codecov](https://codecov.io/gh/nemo-shen/noi/graph/badge.svg?token=V4EYBVE2MS)](https://codecov.io/gh/nemo-shen/noi)
+[![coverage](https://img.shields.io/codecov/c/github/nemo-shen/noi/main.svg)](https://codecov.io/gh/nemo-shen/noi)
 
 NOI is a hight performance/light weight headless UI library.
 
