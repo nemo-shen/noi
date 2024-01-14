@@ -27,6 +27,7 @@ interface UseEllipsisOptions {
   position?: EllipsisPosition // 同组件 prop default 'end'
   action?: (payload: { state: Ref<EllipsisState>; toggle: Function }) => VNode // 操作 VNode则表示自定义slot 传入之后会被计算到字符中
 }
+
 interface UseEllipsisReturn {
   content: ComputedRef<string> // 省略后的内容
   state: EllipsisState // 当前状态

@@ -1,3 +1,9 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`useEllipsis > should  1`] = `"<div>NOI is a h...</div>"`;
+exports[`useEllipsis > should be ellipsis at start 1`] = `"<div>...abcdefg</div>"`;
+
+exports[`useEllipsis > should be ellipsis correctly 1`] = `"<div>abcdefg...</div>"`;
+
+exports[`useEllipsis > should be ellipsis from 2 rows 1`] = `"<div>abcdefghijklmnopq...</div>"`;
+
+exports[`useEllipsis > should use custom ellipsisText 1`] = `"<div>abcde etc.</div>"`;

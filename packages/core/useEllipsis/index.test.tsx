@@ -1,23 +1,13 @@
 import { ref, nextTick } from 'vue'
-import { describe, expect, it, test, beforeAll, afterAll } from 'vitest'
+import { describe, expect, test, beforeAll, afterAll } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { useEllipsis } from '.'
-// basic usage
-//
-/**
- * 1. 正常渲染
- * 3. content & ellipsisContent
- * 4. custom ellipsisText
- * 5. position
- * 6. rows
- * 7. 响应式，改变窗口resize，或者响应式容器，或者改变content
- * 8. 不同的行号 & 不同的字体大小
- */
+import { EllipsisPosition, useEllipsis } from '.'
+
 const originGetComputedStyle = window.getComputedStyle
 
 const lineHeight = 20
 
-const content = 'NOI is a hight performance/light weight headless UI library.'
+const content = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 beforeAll(() => {
   window.getComputedStyle = (el) => ({
@@ -28,16 +18,8 @@ beforeAll(() => {
   })
   Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
     get() {
-      if (this.innerText.length < 10) {
-        return lineHeight
-      }
-      if (this.innerText.includes('...')) {
-        const row = Math.ceil(
-          (this.innerText.replace(/\.\.\./g, '中').length / content.length) * 4
-        )
-        return lineHeight * row
-      }
-      return lineHeight * 4
+      const rows = Math.ceil(this.innerText.length / 10)
+      return lineHeight * rows
     },
     set() {},
     configurable: true,
@@ -49,17 +31,68 @@ afterAll(() => {
 })
 
 describe('useEllipsis', () => {
-  it('should be defined', () => {
+  test('should be defined', () => {
     expect(useEllipsis).toBeDefined()
   })
 
-  test('should ', async () => {
+  test('should be ellipsis correctly', async () => {
     const wrapper = mount({
       setup() {
         const sourceContent = ref(content)
         const ellipsisRef = ref<HTMLElement>()
         const { content: ellipsisContent } = useEllipsis(ellipsisRef, {
           content: sourceContent,
+        })
+        return () => <div ref={ellipsisRef}>{ellipsisContent.value}</div>
+      },
+    })
+
+    await nextTick()
+    expect(wrapper.html()).toMatchSnapshot()
+  })
+
+  test('should use custom ellipsisText', async () => {
+    const wrapper = mount({
+      setup() {
+        const sourceContent = ref(content)
+        const ellipsisRef = ref<HTMLElement>()
+        const { content: ellipsisContent } = useEllipsis(ellipsisRef, {
+          content: sourceContent,
+          ellipsisText: ' etc.',
+        })
+        return () => <div ref={ellipsisRef}>{ellipsisContent.value}</div>
+      },
+    })
+
+    await nextTick()
+    expect(wrapper.html()).toMatchSnapshot()
+  })
+
+  test('should be ellipsis at start', async () => {
+    const wrapper = mount({
+      setup() {
+        const sourceContent = ref(content)
+        const ellipsisRef = ref<HTMLElement>()
+        const { content: ellipsisContent } = useEllipsis(ellipsisRef, {
+          content: sourceContent,
+          position: EllipsisPosition.Start,
+        })
+        return () => <div ref={ellipsisRef}>{ellipsisContent.value}</div>
+      },
+    })
+
+    await nextTick()
+    expect(wrapper.html()).toMatchSnapshot()
+  })
+
+  test('should be ellipsis from 2 rows', async () => {
+    const wrapper = mount({
+      setup() {
+        const sourceContent = ref(content)
+        const ellipsisRef = ref<HTMLElement>()
+        const { content: ellipsisContent } = useEllipsis(ellipsisRef, {
+          content: sourceContent,
+          rows: 2,
         })
         return () => <div ref={ellipsisRef}>{ellipsisContent.value}</div>
       },
