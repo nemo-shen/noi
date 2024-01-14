@@ -11,6 +11,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
+    "test:cov": "vitest run --coverage",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier -w ."
@@ -37,6 +38,7 @@
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@vitejs/plugin-vue": "^4.5.2",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "@vitest/coverage-istanbul": "^1.2.0",
     "@vue/test-utils": "^2.4.3",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^15.0.0",

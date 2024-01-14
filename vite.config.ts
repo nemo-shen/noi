@@ -7,6 +7,10 @@ export default defineConfig({
   plugins: [vue(), vueJsx()],
   test: {
     environment: 'happy-dom',
+    coverage: {
+      provider: 'istanbul',
+      reporter: ['text', 'json', 'html'],
+    },
   },
   resolve: {
     alias: {
