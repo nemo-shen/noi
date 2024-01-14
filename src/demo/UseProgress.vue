@@ -1,30 +1,22 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useLoading } from '@noi/core'
+import { useProgress } from '@noi/core'
 
-const { isLoading, start, stop } = useLoading()
-
-// const upload = () => {
-//   start();
-
-//   setTimeout(() => {
-//     stop()
-//   }, 1000)
-// }
-
-// const loading = ref(false)
-
-// const upload = () => {
-//   loading.value = true
-
-//   setTimeout(() => {
-//     loading.value = false
-//   }, 1000)
-// }
+const { progress, increment, startAutoIncrement } = useProgress({
+  autoIncrementRules: [
+    { before: 30, delay: 100, increment: 2 },
+    { before: 50, delay: 500, increment: 1 },
+    { before: 70, delay: 300, increment: 3 },
+  ],
+})
 </script>
 
 <template>
-  <div v-show="isLoading">loading...</div>
-  <button @click="start">start loading</button>
-  <button @click="stop">stop loading</button>
+  <div>
+    <div>{{ progress }}</div>
+    <template v-for="i in progress">|</template>
+  </div>
+
+  <button @click="increment()">increment</button>
+  <button @click="startAutoIncrement()">auto increment</button>
 </template>
