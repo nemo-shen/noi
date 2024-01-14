@@ -20,12 +20,6 @@ const DEFAULT_AUTO_INCREMENT_RULE: AutoIncrementRule = {
   delay: 1000,
 }
 
-/**
- * 1. 计算百分比 0...100
- * 3. 提供step能力，可以动态管理进度，但最终的finish需要明确告知
- * 6. 提供进度条描述文案 [{ value: 10, text: '111'}, { value: 20, text: '222' }]
- * 7. 提供onChange option，当进度变化时，会将进度返回，开发者可以通过这个callback做其他额外处理
- */
 export const useProgress = (options: UseProgressOptions = {}) => {
   const {
     initialValue = 0,
@@ -33,24 +27,23 @@ export const useProgress = (options: UseProgressOptions = {}) => {
     autoIncrementRules = [],
     onChange,
   } = options
-  const progress = ref(initialValue)
-
-  const setProgress = (value: number = 1) => {
-    progress.value = Math.min(maxValue, Math.max(0, value))
-  }
+  const currentValue = ref(0)
+  const progress = computed(() =>
+    parseFloat(((currentValue.value / maxValue) * 100).toFixed(2))
+  )
 
   const increment = (value: number = 1) => {
-    if (progress.value >= maxValue) return
-    progress.value = Math.min(maxValue, progress.value + value)
+    if (currentValue.value >= maxValue) return
+    currentValue.value = Math.min(maxValue, currentValue.value + value)
   }
 
   const decrement = (value: number) => {
-    if (progress.value <= 0) return
-    progress.value = Math.min(0, progress.value - value)
+    if (currentValue.value <= 0) return
+    currentValue.value = Math.min(0, currentValue.value - value)
   }
 
   const reset = () => {
-    progress.value = initialValue
+    currentValue.value = initialValue
   }
 
   const matchRule = () => {
@@ -94,7 +87,6 @@ export const useProgress = (options: UseProgressOptions = {}) => {
 
   return {
     progress,
-    setProgress,
     increment,
     decrement,
     isComplete,
