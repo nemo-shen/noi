@@ -27,7 +27,7 @@ export const useProgress = (options: UseProgressOptions = {}) => {
     autoIncrementRules = [],
     onChange,
   } = options
-  const currentValue = ref(0)
+  const currentValue = ref(initialValue)
   const progress = computed(() =>
     parseFloat(((currentValue.value / maxValue) * 100).toFixed(2))
   )
@@ -37,9 +37,9 @@ export const useProgress = (options: UseProgressOptions = {}) => {
     currentValue.value = Math.min(maxValue, currentValue.value + value)
   }
 
-  const decrement = (value: number) => {
+  const decrement = (value: number = 1) => {
     if (currentValue.value <= 0) return
-    currentValue.value = Math.min(0, currentValue.value - value)
+    currentValue.value = Math.max(0, currentValue.value - value)
   }
 
   const reset = () => {
