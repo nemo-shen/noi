@@ -29,7 +29,7 @@ const getDays = (year: number, month: number) => {
 export const useCalendar = (options: UseCalendarOptions = {}) => {
   const {
     initialDate = new Date(),
-    locale = 'en-US',
+    locale = Intl.DateTimeFormat().resolvedOptions().locale,
     firstDayOfWeek = 0,
   } = options
 

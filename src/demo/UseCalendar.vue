@@ -2,7 +2,9 @@
 import { ref, h, VNode } from 'vue'
 import { useCalendar } from '@noi/core'
 
-useCalendar()
+const { currentMonthDays } = useCalendar()
 </script>
 
-<template></template>
+<template>
+  {{ currentMonthDays }}
+</template>
