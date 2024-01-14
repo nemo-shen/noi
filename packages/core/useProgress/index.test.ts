@@ -1,10 +1,6 @@
 import { vi, describe, expect, test } from 'vitest'
 import { useProgress } from '.'
-
-const wait = (time) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, time)
-  })
+import { wait } from '../utils'
 
 describe('useEllipsis', () => {
   test('should be defined', () => {
