@@ -35,15 +35,12 @@ const {
     <div class="text-center" v-for="week in weekDays">{{ week }}</div>
     <template v-for="(days, index) in getDays(2024)" :key="index">
       <div
-        class="bg-sky-500 text-center text-white rounded-md"
+        class="text-center text-white rounded-md"
+        :class="{ 'bg-sky-500': !day.disabled }"
         v-for="day in days"
       >
-        {{ day.name }}
+        <template v-if="!day.disabled">{{ day.name }}</template>
       </div>
-      <br />
     </template>
-    <!-- <span>{{ day.name }}:{{ day.week }},</span> -->
-    <!-- <br />
-    <br /> -->
   </div>
 </template>

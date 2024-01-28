@@ -144,21 +144,41 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
     month: number = -1
   ): Day[][] => {
     if (year && month === -1) {
-      const months = Array.from({ length: 12 }, (_, k) => k + 1).map((m) =>
-        Array.from({ length: getDays(year, m) }, (_, index) => {
-          const date = new Date()
-          date.setFullYear(year)
-          date.setMonth(m - 1)
-          date.setDate(index + 1)
-          const day: Day = {
-            name: index + 1,
-            value: date,
-            week: date.getDay(),
-            disabled: false,
-          }
-          return day
+      const months = Array.from({ length: 12 }, (_, k) => k + 1)
+        .map((m) =>
+          Array.from({ length: getDays(year, m) }, (_, index) => {
+            const date = new Date()
+            date.setFullYear(year)
+            date.setMonth(m - 1)
+            date.setDate(index + 1)
+            const day: Day = {
+              name: index + 1,
+              value: date,
+              week: date.getDay(),
+              disabled: false,
+            }
+            return day
+          })
+        )
+        .map((item) => {
+          const fillMonth = Array.from({ length: item[0].week }, (k) => ({
+            name: k,
+            value: null,
+            week: null,
+            disabled: true,
+          }))
+            .concat(item)
+            .concat(
+              Array.from({ length: 6 - item[item.length - 1].week }, (k) => ({
+                name: k,
+                value: null,
+                week: null,
+                disabled: true,
+              }))
+            )
+          return fillMonth
         })
-      )
+
       return months
     }
     return [
