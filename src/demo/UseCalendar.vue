@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, h, VNode } from 'vue'
+import { watch, ref, h, VNode } from 'vue'
 import { useCalendar, Locale } from '@noi/core'
 
 const {
@@ -13,13 +13,16 @@ const {
   goToPreviousMonth,
   goToNextYear,
   goToPreviousYear,
-  getDays,
+  selectedDate,
+  setSelectDate,
 } = useCalendar({
   locale: Locale.CN,
+  selectType: 'range'
 })
 </script>
 
 <template>
+  {{ selectedDate }}
   <div class="flex gap-1">
     <button
       @click="goToPreviousYear"
@@ -61,15 +64,20 @@ const {
     <template v-for="days in currentMonthDays">
       <div
         class="col-span-1 w-full h-14 text-center rounded-md align-middle flex items-center justify-center"
-        :class="{
-          'text-gray-300': day.disabled,
-          'cursor-pointer': !day.disabled,
-          'hover:bg-blue-50': !day.disabled,
-          'hover:text-blue-500': !day.disabled,
-        }"
+        @click="setSelectDate(day.value)"
+        :class="[
+          day.selected
+            ? ['bg-blue-500', 'text-white']
+            : day.disabled
+              ? ['text-gray-300']
+              : ['hover:bg-blue-50', 'hover:text-blue-500'],
+          {
+            'cursor-pointer': !day.disabled,
+          },
+        ]"
         v-for="day in days"
       >
-        {{ day.name }}
+        {{ day.name }}{{ day.selected }}
       </div>
     </template>
   </div>

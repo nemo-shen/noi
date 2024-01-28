@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed, type Ref } from 'vue'
 /**
  * 1. 首先需要初始化一个日历给开发者
  * 2. minDate 默认当月1号
@@ -34,11 +34,22 @@ export enum Locale {
   CN = 'zh-CN',
 }
 
+type SelectType = 'single' | 'multiple' | 'range'
+
 interface UseCalendarOptions {
   initialDate?: Date // 默认当日
   locale?: Locale // 默认当地
   firstDayOfWeek?: 0 // 默认 周日 = 0
+  selectType?: SelectType
 }
+
+type SelectedDate<T extends SelectType | undefined> = T extends 'single'
+  ? Date
+  : T extends 'multiple'
+    ? Date[]
+    : T extends 'range'
+      ? [Date, Date]
+      : never
 
 const isLeapYear = (year: number) =>
   (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
@@ -55,14 +66,41 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
     initialDate = new Date(),
     locale = Intl.DateTimeFormat().resolvedOptions().locale,
     firstDayOfWeek = 0,
+    selectType = 'single',
   } = options
   const currentYear = ref(initialDate.getFullYear())
   const currentMonth = ref(initialDate.getMonth() + 1)
+  const selectedDate = ref<SelectedDate<SelectType>>()
 
-  // 允许选择一个日期或者一个日期范围。
-  const selectDate = (_value: Date | [Date, Date]) => {}
+  const setSelectDate = (value: Date) => {
+    switch (selectType) {
+      case 'single':
+        selectedDate.value = value
+        break
+      case 'multiple':
+        if (
+          !(selectedDate.value as SelectedDate<typeof selectType>).includes(
+            value
+          )
+        ) {
+          ;(selectedDate.value as SelectedDate<typeof selectType>).push(value)
+        }
+        break
+      case 'range':
+        if (!selectedDate.value) {
+          selectedDate.value = [value]
+        } else if ((selectedDate.value as SelectedDate<typeof selectType>).length === 2) {
+          selectedDate.value[0] = value
+        } else {
+          selectedDate.value[1] = value
+        }
+        break
+      default:
+        selectedDate.value = value
+        break
+    }
+  }
 
-  // 将日历前进到下一个月。
   const goToNextMonth = () => {
     if (currentMonth.value === 12) {
       console.warn('It is already the biggest month')
@@ -71,7 +109,6 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
     currentMonth.value += 1
   }
 
-  // 将日历后退到上一个月。
   const goToPreviousMonth = () => {
     if (currentMonth.value === 1) {
       console.warn('It is already the smallest month')
@@ -80,7 +117,6 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
     currentMonth.value -= 1
   }
 
-  // 将日历前进到下一个月。
   const goToNextYear = () => {
     if (currentYear.value === 285616) {
       console.warn('It is already the biggest year.')
@@ -89,7 +125,6 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
     currentYear.value += 1
   }
 
-  // 将日历后退到上一个月。
   const goToPreviousYear = () => {
     if (currentMonth.value === 1997) {
       console.warn('It is already the smallest year.')
@@ -98,16 +133,11 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
     currentYear.value -= 1
   }
 
-  // 将日历重置到今天的日期。
   const goToToday = () => {
-    // 需要重置年月
     const now = new Date()
     currentYear.value = now.getFullYear()
     currentMonth.value = now.getMonth() + 1
   }
-
-  // 用户选中的日期，可以通过用户交互来设置。
-  const selectedDate = ref<Date | [Date, Date]>()
 
   const weekDays = computed(() => {
     let daysOfWeek: string | any[]
@@ -128,6 +158,30 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
       .concat(daysOfWeek.slice(0, firstDayOfWeek))
   })
 
+  const isSelectedDate = (date: Date) => {
+    if (!selectedDate.value) return false
+    const daySeconds = 1000 * 24 * 3600
+    const now = Math.floor(date.getTime() / daySeconds)
+    if (selectType === 'single') {
+      const selectDate = Math.floor(
+        (selectedDate.value as SelectedDate<typeof selectType>).getTime() /
+          daySeconds
+      )
+      return now === selectDate
+    }
+    if (selectType === 'multiple') {
+      return (selectedDate.value as Date[]).includes((sd) => {
+        const selectDateTime = Math.floor(sd.getTime() / daySeconds)
+        return now === selectDateTime
+      })
+    }
+    const start = selectedDate.value![0] ? Math.floor(selectedDate.value[0].getTime() / daySeconds) : 0
+    const end = selectedDate.value![1] ? Math.floor(selectedDate.value[1].getTime() / daySeconds) : 0
+    console.log(start, end, now);
+
+    return start <= now && now <= end
+  }
+
   const getMonthDays = (year, month): Day[] =>
     Array.from({ length: getDays(year, month) }, (_, index) => {
       const date = new Date()
@@ -140,7 +194,7 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
         week: date.getDay(),
         disabled: false,
         type: 'current',
-        selected: false,
+        selected: isSelectedDate(date),
       }
       return day
     })
@@ -158,7 +212,7 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
         week: startDate.getDate(),
         disabled: true,
         type: 'fill',
-        selected: false,
+        selected: isSelectedDate(startDate),
       }
       return day
     })
@@ -172,7 +226,7 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
             week: endDate.getDay(),
             disabled: true,
             type: 'fill',
-            selected: false,
+            selected: isSelectedDate(endDate),
           }
           return day
         })
@@ -200,18 +254,17 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
 
   return {
     currentYearDays,
-    currentMonth,
-    currentYear,
-    selectedDate,
     currentMonthDays,
+    currentYear,
+    currentMonth,
+    selectedDate,
+    setSelectDate,
     weekDays,
-    selectDate,
     goToNextMonth,
     goToPreviousMonth,
     goToNextYear,
     goToPreviousYear,
     goToToday,
-    getDays: getDaysByYear,
   }
 }
 
