@@ -32,26 +32,42 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
     locale = Intl.DateTimeFormat().resolvedOptions().locale,
     firstDayOfWeek = 0,
   } = options
+  const currentYear = ref(initialDate.getFullYear())
+  const currentMonth = ref(initialDate.getMonth() + 1)
 
   // 允许选择一个日期或者一个日期范围。
   const selectDate = (_value: Date | [Date, Date]) => {}
 
   // 将日历前进到下一个月。
-  const goToNextMonth = () => {}
+  const goToNextMonth = () => {
+    if (currentMonth.value === 12) {
+      console.warn('It is already the biggest month')
+      return
+    }
+    currentMonth.value += 1
+  }
 
   // 将日历后退到上一个月。
-  const goToPreviousMonth = () => {}
+  const goToPreviousMonth = () => {
+    if (currentMonth.value === 1) {
+      console.warn('It is already the smallest month')
+      return
+    }
+    currentMonth.value -= 1
+  }
 
   // 将日历重置到今天的日期。
   const goToToday = () => {}
 
-  const currentYear = initialDate.getFullYear()
-  const currentMonth = initialDate.getMonth() + 1
-
-  // 当前月份中的所有天，包括前一个月和下一个月在当前月视图中显示的天。
+  //
+  /**
+   * 当前月份中的所有天，包括前一个月和下一个月在当前月视图中显示的天。
+   * 1. 是否是特殊日期
+   * 2.
+   */
   const currentMonthDays = computed(() =>
     Array.from(
-      { length: getDays(currentYear, currentMonth) },
+      { length: getDays(currentYear.value, currentMonth.value) },
       (_, index) => index + 1
     )
   )
