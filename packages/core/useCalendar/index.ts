@@ -56,8 +56,31 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
     currentMonth.value -= 1
   }
 
+  // 将日历前进到下一个月。
+  const goToNextYear = () => {
+    if (currentYear.value === 285616) {
+      console.warn('It is already the biggest year.')
+      return
+    }
+    currentYear.value += 1
+  }
+
+  // 将日历后退到上一个月。
+  const goToPreviousYear = () => {
+    if (currentMonth.value === 1997) {
+      console.warn('It is already the smallest year.')
+      return
+    }
+    currentYear.value -= 1
+  }
+
   // 将日历重置到今天的日期。
-  const goToToday = () => {}
+  const goToToday = () => {
+    // 需要重置年月
+    const now = new Date()
+    currentYear.value = now.getFullYear()
+    currentMonth.value = now.getMonth() + 1
+  }
 
   //
   /**
@@ -101,6 +124,8 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
     selectDate,
     goToNextMonth,
     goToPreviousMonth,
+    goToNextYear,
+    goToPreviousYear,
     goToToday,
   }
 }
