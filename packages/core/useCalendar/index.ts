@@ -24,7 +24,9 @@ interface Day {
   name: number
   value: Date
   week: Week
+  type: 'current' | 'fill'
   disabled: boolean
+  selected: boolean
 }
 
 export enum Locale {
@@ -137,6 +139,8 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
         value: date,
         week: date.getDay(),
         disabled: false,
+        type: 'current',
+        selected: false,
       }
       return day
     })
@@ -148,23 +152,29 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
     const endDate = new Date(endDay.value)
     return Array.from({ length: startDay.week }, () => {
       startDate.setDate(startDate.getDate() - 1)
-      return {
+      const day: Day = {
         name: startDate.getDate(),
         value: startDate,
         week: startDate.getDate(),
         disabled: true,
-      } as Day
+        type: 'fill',
+        selected: false,
+      }
+      return day
     })
       .concat(days)
       .concat(
         Array.from({ length: 6 - endDay.week }, () => {
           endDate.setDate(endDate.getDate() + 1)
-          return {
+          const day: Day = {
             name: endDate.getDate(),
             value: endDate,
             week: endDate.getDay(),
             disabled: true,
-          } as Day
+            type: 'fill',
+            selected: false,
+          }
+          return day
         })
       )
   }
