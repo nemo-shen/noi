@@ -161,21 +161,32 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
           })
         )
         .map((item) => {
-          const fillMonth = Array.from({ length: item[0].week }, (k) => ({
-            name: k,
-            value: null,
-            week: null,
-            disabled: true,
-          }))
+          const startDay = item[0]
+          const endDay = item[item.length - 1]
+          const startDate = new Date(startDay.value)
+          const endDate = new Date(endDay.value)
+          const fillMonth = Array.from({ length: startDay.week }, (k) => {
+            startDate.setDate(startDate.getDate() - 1)
+            return {
+              name: startDate.getDate(),
+              value: startDate,
+              week: startDate.getDate(),
+              disabled: true,
+            } as Day
+          })
             .concat(item)
             .concat(
-              Array.from({ length: 6 - item[item.length - 1].week }, (k) => ({
-                name: k,
-                value: null,
-                week: null,
-                disabled: true,
-              }))
+              Array.from({ length: 6 - endDay.week }, (k) => {
+                endDate.setDate(endDate.getDate() + 1)
+                return {
+                  name: endDate.getDate(),
+                  value: endDate,
+                  week: endDate.getDay(),
+                  disabled: true,
+                } as Day
+              })
             )
+          console.log(fillMonth)
           return fillMonth
         })
 

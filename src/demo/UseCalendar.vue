@@ -31,15 +31,15 @@ const {
   {{ weekDays }}
   <br />
   <!-- {{ currentMonthDays }} -->
-  <div class="grid grid-cols-7 gap-1 grid-flow-row-dense p-1">
+  <div class=" grid grid-cols-7 gap-1 grid-flow-row-dense p-1">
     <div class="text-center" v-for="week in weekDays">{{ week }}</div>
     <template v-for="(days, index) in getDays(2024)" :key="index">
       <div
-        class="text-center text-white rounded-md"
-        :class="{ 'bg-sky-500': !day.disabled }"
+        class=" col-span-1 w-full h-14 text-center text-white rounded-md align-middle flex items-center justify-center"
+        :class="{ 'bg-sky-500': !day.disabled, 'bg-sky-200': day.disabled }"
         v-for="day in days"
       >
-        <template v-if="!day.disabled">{{ day.name }}</template>
+      {{ day.name }}
       </div>
     </template>
   </div>
