@@ -165,7 +165,7 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
           const endDay = item[item.length - 1]
           const startDate = new Date(startDay.value)
           const endDate = new Date(endDay.value)
-          const fillMonth = Array.from({ length: startDay.week }, (k) => {
+          const fillMonth = Array.from({ length: startDay.week }, () => {
             startDate.setDate(startDate.getDate() - 1)
             return {
               name: startDate.getDate(),
@@ -176,7 +176,7 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
           })
             .concat(item)
             .concat(
-              Array.from({ length: 6 - endDay.week }, (k) => {
+              Array.from({ length: 6 - endDay.week }, () => {
                 endDate.setDate(endDate.getDate() + 1)
                 return {
                   name: endDate.getDate(),
@@ -186,7 +186,6 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
                 } as Day
               })
             )
-          console.log(fillMonth)
           return fillMonth
         })
 
