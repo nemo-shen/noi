@@ -102,7 +102,7 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
     let daysOfWeek: string | any[]
     switch (locale) {
       case 'zh-CN':
-        daysOfWeek = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+        daysOfWeek = ['日', '一', '二', '三', '四', '五', '六']
         break
       case 'en-US':
         daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat']
