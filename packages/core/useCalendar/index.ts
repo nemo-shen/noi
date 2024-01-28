@@ -139,76 +139,66 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
       .concat(daysOfWeek.slice(0, firstDayOfWeek))
   })
 
+  const getMonthDays = (year, month): Day[] =>
+    Array.from({ length: getDays(year, month) }, (_, index) => {
+      const date = new Date()
+      date.setFullYear(year)
+      date.setMonth(month - 1)
+      date.setDate(index + 1)
+      const day: Day = {
+        name: index + 1,
+        value: date,
+        week: date.getDay(),
+        disabled: false,
+      }
+      return day
+    })
+
+  const fillPadDates = (days: Day[]): Day[] => {
+    const startDay = days[0]
+    const endDay = days[days.length - 1]
+    const startDate = new Date(startDay.value)
+    const endDate = new Date(endDay.value)
+    return Array.from({ length: startDay.week }, () => {
+      startDate.setDate(startDate.getDate() - 1)
+      return {
+        name: startDate.getDate(),
+        value: startDate,
+        week: startDate.getDate(),
+        disabled: true,
+      } as Day
+    })
+      .concat(days)
+      .concat(
+        Array.from({ length: 6 - endDay.week }, () => {
+          endDate.setDate(endDate.getDate() + 1)
+          return {
+            name: endDate.getDate(),
+            value: endDate,
+            week: endDate.getDay(),
+            disabled: true,
+          } as Day
+        })
+      )
+  }
+
   const getDaysByYear = (
     year: number = new Date().getFullYear(),
     month: number = -1
   ): Day[][] => {
     if (year && month === -1) {
-      const months = Array.from({ length: 12 }, (_, k) => k + 1)
-        .map((m) =>
-          Array.from({ length: getDays(year, m) }, (_, index) => {
-            const date = new Date()
-            date.setFullYear(year)
-            date.setMonth(m - 1)
-            date.setDate(index + 1)
-            const day: Day = {
-              name: index + 1,
-              value: date,
-              week: date.getDay(),
-              disabled: false,
-            }
-            return day
-          })
-        )
-        .map((item) => {
-          const startDay = item[0]
-          const endDay = item[item.length - 1]
-          const startDate = new Date(startDay.value)
-          const endDate = new Date(endDay.value)
-          const fillMonth = Array.from({ length: startDay.week }, () => {
-            startDate.setDate(startDate.getDate() - 1)
-            return {
-              name: startDate.getDate(),
-              value: startDate,
-              week: startDate.getDate(),
-              disabled: true,
-            } as Day
-          })
-            .concat(item)
-            .concat(
-              Array.from({ length: 6 - endDay.week }, () => {
-                endDate.setDate(endDate.getDate() + 1)
-                return {
-                  name: endDate.getDate(),
-                  value: endDate,
-                  week: endDate.getDay(),
-                  disabled: true,
-                } as Day
-              })
-            )
-          return fillMonth
-        })
+      const months = Array.from({ length: 12 }, (_, k) => k + 1).map((m) =>
+        fillPadDates(getMonthDays(year, m))
+      )
 
       return months
     }
-    return [
-      Array.from({ length: getDays(year, month) }, (_, index) => {
-        const date = new Date()
-        date.setFullYear(year)
-        date.setMonth(month - 1)
-        date.setDate(index + 1)
-        const day: Day = {
-          name: index + 1,
-          value: date,
-          week: date.getDay(),
-          disabled: false,
-        }
-        return day
-      }),
-    ]
+    return [getMonthDays(year, month)]
   }
 
   return {
+    currentMonth,
+    currentYear,
     selectedDate,
     currentMonthDays,
     weekDays,

@@ -4,6 +4,8 @@ import { useCalendar, Locale } from '@noi/core'
 
 const {
   weekDays,
+  currentMonth,
+  currentYear,
   currentMonthDays,
   goToToday,
   goToNextMonth,
@@ -35,7 +37,7 @@ const {
   <br />
   {{ weekDays }}
   <br />
-  <!-- {{ currentMonthDays }} -->
+  <h1>{{ currentYear }} - {{ currentMonth }}</h1>
   <div class="grid grid-cols-7 gap-1 grid-flow-row-dense p-1">
     <div class="text-center" v-for="week in weekDays">{{ week }}</div>
     <template v-for="(days, index) in getDays(2024)" :key="index">
