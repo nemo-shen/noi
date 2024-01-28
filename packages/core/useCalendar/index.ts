@@ -104,19 +104,6 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
     currentMonth.value = now.getMonth() + 1
   }
 
-  //
-  /**
-   * 当前月份中的所有天，包括前一个月和下一个月在当前月视图中显示的天。
-   * 1. 是否是特殊日期
-   * 2.
-   */
-  const currentMonthDays = computed(() =>
-    Array.from(
-      { length: getDays(currentYear.value, currentMonth.value) },
-      (_, index) => index + 1
-    )
-  )
-
   // 用户选中的日期，可以通过用户交互来设置。
   const selectedDate = ref<Date | [Date, Date]>()
 
@@ -193,10 +180,16 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
 
       return months
     }
-    return [getMonthDays(year, month)]
+    return [fillPadDates(getMonthDays(year, month))]
   }
 
+  const currentYearDays = computed(() => getDaysByYear(currentYear.value))
+  const currentMonthDays = computed(() =>
+    getDaysByYear(currentYear.value, currentMonth.value)
+  )
+
   return {
+    currentYearDays,
     currentMonth,
     currentYear,
     selectedDate,
