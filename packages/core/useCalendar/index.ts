@@ -10,9 +10,31 @@ import { ref, computed } from 'vue'
  * ]
  */
 
+enum Week {
+  SUN = 0,
+  MON = 1,
+  TUE = 2,
+  WED = 3,
+  THU = 4,
+  FRI = 5,
+  SAT = 6,
+}
+
+interface Day {
+  name: number
+  value: Date
+  week: Week
+  disabled: boolean
+}
+
+export enum Locale {
+  EN = 'en-US',
+  CN = 'zh-CN',
+}
+
 interface UseCalendarOptions {
   initialDate?: Date // 默认当日
-  locale?: 'en-US' | 'zh-CN' // 默认当地
+  locale?: Locale // 默认当地
   firstDayOfWeek?: 0 // 默认 周日 = 0
 }
 
@@ -117,6 +139,45 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
       .concat(daysOfWeek.slice(0, firstDayOfWeek))
   })
 
+  const getDaysByYear = (
+    year: number = new Date().getFullYear(),
+    month: number = -1
+  ): Day[][] => {
+    if (year && month === -1) {
+      const months = Array.from({ length: 12 }, (_, k) => k + 1).map((m) =>
+        Array.from({ length: getDays(year, m) }, (_, index) => {
+          const date = new Date()
+          date.setFullYear(year)
+          date.setMonth(m - 1)
+          date.setDate(index + 1)
+          const day: Day = {
+            name: index + 1,
+            value: date,
+            week: date.getDay(),
+            disabled: false,
+          }
+          return day
+        })
+      )
+      return months
+    }
+    return [
+      Array.from({ length: getDays(year, month) }, (_, index) => {
+        const date = new Date()
+        date.setFullYear(year)
+        date.setMonth(month - 1)
+        date.setDate(index + 1)
+        const day: Day = {
+          name: index + 1,
+          value: date,
+          week: date.getDay(),
+          disabled: false,
+        }
+        return day
+      }),
+    ]
+  }
+
   return {
     selectedDate,
     currentMonthDays,
@@ -127,6 +188,7 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
     goToNextYear,
     goToPreviousYear,
     goToToday,
+    getDays: getDaysByYear,
   }
 }
 
