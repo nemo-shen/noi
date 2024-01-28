@@ -41,7 +41,7 @@ const {
   <h1>{{ currentYear }} - {{ currentMonth }}</h1>
   <div class="grid grid-cols-7 gap-1 grid-flow-row-dense p-1">
     <div class="text-center" v-for="week in weekDays">{{ week }}</div>
-    <template v-for="days in currentMonthDays" :key="index">
+    <template v-for="days in currentMonthDays">
       <div
         class="col-span-1 w-full h-14 text-center text-white rounded-md align-middle flex items-center justify-center"
         :class="{ 'bg-sky-500': !day.disabled, 'bg-sky-200': day.disabled }"
