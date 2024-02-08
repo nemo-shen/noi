@@ -48,7 +48,7 @@ type SelectedDate<T extends SelectType | undefined> = T extends 'single'
   : T extends 'multiple'
     ? Date[]
     : T extends 'range'
-      ? [Date, Date]
+      ? Date[]
       : never
 
 const isLeapYear = (year: number) =>
@@ -87,10 +87,11 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
         }
         break
       case 'range':
-        if (!selectedDate.value) {
+        // 0 1 2
+        const size = selectedDate.value ? (selectedDate.value as SelectedDate<'range'>).length : 0
+        console.log(size);
+        if (size === 0 || size === 2) {
           selectedDate.value = [value]
-        } else if ((selectedDate.value as SelectedDate<typeof selectType>).length === 2) {
-          selectedDate.value[0] = value
         } else {
           selectedDate.value[1] = value
         }
@@ -175,9 +176,16 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
         return now === selectDateTime
       })
     }
-    const start = selectedDate.value![0] ? Math.floor(selectedDate.value[0].getTime() / daySeconds) : 0
-    const end = selectedDate.value![1] ? Math.floor(selectedDate.value[1].getTime() / daySeconds) : 0
-    console.log(start, end, now);
+    const start = selectedDate.value![0]
+      ? Math.floor(selectedDate.value[0].getTime() / daySeconds)
+      : 0
+    const end = selectedDate.value![1]
+      ? Math.floor(selectedDate.value[1].getTime() / daySeconds)
+      : 0
+
+    if (end === 0) {
+      return start === now
+    }
 
     return start <= now && now <= end
   }
