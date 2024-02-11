@@ -19,6 +19,7 @@ module.exports = {
   },
   plugins: ['vue', '@typescript-eslint', 'markdown'],
   rules: {
+    'no-console': ['error', { allow: ['warn', 'error'] }],
     'import/prefer-default-export': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'import/no-extraneous-dependencies': [
