@@ -4,7 +4,6 @@ interface UseCountdownOptions {
   duration: number
   interval?: number
   immediate?: boolean
-  onComplete?: () => void
 }
 
 interface Countdown {
@@ -27,7 +26,7 @@ interface UseCountdownReturn {
 export const useCountdown = (
   options: UseCountdownOptions
 ): UseCountdownReturn => {
-  const { duration, interval = 1000, immediate = false, onComplete } = options
+  const { duration, interval = 1000, immediate = false } = options
   const remainingTime = ref(duration)
   const isRunning = ref(false)
   let timer: number
@@ -86,7 +85,6 @@ export const useCountdown = (
   watch(remainingTime, (value) => {
     if (value === 0) {
       if (timer) clearInterval(timer)
-      onComplete()
     }
   })
 
