@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import { useCountdown } from '.'
 import { wait } from '../utils'
 
@@ -46,6 +46,18 @@ describe('useEllipsis', () => {
     expect(countdown.value.total).toEqual(3000)
   })
 
+  test('cannot start duplicate', async () => {
+    const spy = vi.spyOn(console, 'warn')
+    const { start } = useCountdown({
+      duration: 3000,
+      interval: 100,
+    })
+    start()
+    await wait(100)
+    start()
+    expect(spy).toHaveBeenCalledWith('Countdown has already running.')
+  })
+
   test('reset with immediate', async () => {
     const { countdown, reset } = useCountdown({
       duration: 3000,
@@ -73,5 +85,18 @@ describe('useEllipsis', () => {
     expect(isRunning.value).toBeFalsy()
   })
 
-  // isRunning: Ref<boolean> // 是否在运行
+  test('isRunning', async () => {
+    const { countdown, isRunning } = useCountdown({
+      duration: 200,
+      interval: 100,
+      immediate: true,
+    })
+    await wait(100)
+    expect(isRunning.value).toBeTruthy()
+    expect(countdown.value.total).toEqual(100)
+
+    await wait(100)
+    expect(isRunning.value).toBeFalsy()
+    expect(countdown.value.total).toEqual(0)
+  })
 })

@@ -39,7 +39,7 @@ export const useCountdown = (
 
   const start = () => {
     if (isRunning.value) {
-      console.warn('Countdown has already running')
+      console.warn('Countdown has already running.')
       return
     }
     isRunning.value = true
@@ -84,6 +84,7 @@ export const useCountdown = (
 
   watch(remainingTime, (value) => {
     if (value === 0) {
+      isRunning.value = false
       if (timer) clearInterval(timer)
     }
   })
