@@ -26,3 +26,5 @@ const openToast = () => {
   <button @click="openToast">show toast with node</button>
 </template>
 ```
+
+To provide a smaller size and better performance, we primarily use modern APIs and consider fallbacks for compatibility as necessary.
