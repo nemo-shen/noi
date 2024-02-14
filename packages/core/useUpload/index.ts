@@ -1,14 +1,31 @@
 import { ref } from 'vue'
 
+/**
+ * TODO:
+ * - [ ] 允许并发上传数量，默认1
+ * - [ ] 允许设置失败重传次数，默认0
+ * - [ ] 限制可上传的文件大小，默认Infinity表示不限制
+ */
+
 interface UseUploadOptions {
   url: string
   multiple?: boolean
   accept?: string
 }
 
+interface UseUploadFile {
+  file: File
+  name: string
+  ext: string
+  url: string
+  status: 'ready' | 'uploading' | 'success' | 'error'
+  error?: Error
+}
+
 interface UseUploadReturn {
   upload: () => void
   append: (file: File | File[]) => void
+  files: Ref<UseUploadFile[]>
 }
 
 interface UploadOptions {
@@ -29,15 +46,36 @@ const uploadFile = (options: UploadOptions, file: File) => {
   })
 }
 
+type Base64 = string
+
+const useFileReader = (file: File): Promise<Base64> => new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      resolve(e.target.result)
+    }
+    reader.readAsDataURL(file)
+  })
+
+const genUploadFile = async (file: File): UseUploadFile => ({
+    file,
+    name: file.name.split('.')[0],
+    ext: file.name.split('.')[1],
+    data: await useFileReader(file),
+    url: '',
+    status: 'ready',
+  })
+
 export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
   const { url, multiple = false, accept = '' } = options
   const acceptList = accept.split(',').map((type) => type.trim())
-  const files = ref<File[]>([])
+  const files = ref<UseUploadFile[]>([])
 
   const upload = () => {
-    const result = files.value.map((file) => uploadFile({ url }, file))
-    Promise.all(result).then((res) => {
-      console.log(res)
+    files.value.forEach((file, index) => {
+      uploadFile({ url }, file)
+      .then((_result) => {
+        files.value[index].status = 'success'
+      })
     })
   }
 
@@ -54,7 +92,7 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
     })
   }
 
-  const append = (file: File | File[]) => {
+  const append = async (file: File | File[]) => {
     if (!multiple && Array.isArray(file)) {
       console.warn(
         'if you want upload multiple files, set options multiple is `true`'
@@ -62,19 +100,23 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
     }
     if (multiple) {
       if (!(file as File[]).every(validFileType)) {
-        throw new Error("Have some File reject");
+        throw new Error('Have some File reject')
       }
-      files.value = [...files.value, ...(file as File[])]
+      files.value = [
+        ...files.value,
+        ...await (file as File[]).map(async (f) => genUploadFile(f)),
+      ]
     } else {
       if (!validFileType(file as File)) {
-        throw new Error("File type reject.");
+        throw new Error('File type reject.')
       }
-      files.value.push(file as File)
+      files.value.push(await genUploadFile(file))
     }
   }
 
   return {
     upload,
     append,
+    files,
   }
 }
