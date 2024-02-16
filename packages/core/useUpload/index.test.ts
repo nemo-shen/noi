@@ -99,15 +99,25 @@ describe('useUpload', () => {
     remove([2, 3])
     expect(files.value.length).toEqual(2)
     expect(files.value.map((file) => file.name)).toEqual(['file1', 'file3'])
+
+    expect(() => remove(2)).toThrow('Index out of range.')
   })
 
   test('limit file type', async () => {
     const { files, append } = useUpload({ url: '#', accept: 'image/*' })
 
     await append(new File([''], 'image-jpg.jpg', { type: 'image/jpg' }))
-    await append(new File([''], 'image-png.png', { type: 'image/png' }))
-    expect(append(new File([''], 'file1.txt', { type: 'text/plain' }))).rejects.toThrow('Invalid file type.')
-    expect(files.value.map((file) => file.name)).toEqual(['image-jpg', 'image-png'])
+    await append(new File([''], 'image-png1.png', { type: 'image/png' }))
+    expect(
+      append(new File([''], 'image-png2.png', { type: '.png' }))
+    ).rejects.toThrow('Invalid file type.')
+    expect(
+      append(new File([''], 'file1.txt', { type: 'text/plain' }))
+    ).rejects.toThrow('Invalid file type.')
+    expect(files.value.map((file) => file.name)).toEqual([
+      'image-jpg',
+      'image-png1',
+    ])
   })
 
   test('max-count', async () => {

@@ -113,8 +113,6 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
       appendFiles = file
     } else if (file instanceof File) {
       appendFiles = [file]
-    } else {
-      // nothing
     }
     // check max size
     if (files.value.length + appendFiles.length > maxCount) {
@@ -147,7 +145,7 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
         return i < files.value.length
       })
     ) {
-      throw new Error('Have a index out of range.')
+      throw new Error('Index out of range.')
     }
     if (Array.isArray(index)) {
       const removeFiles = files.value.filter((_, i) => index.includes(i))
