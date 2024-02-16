@@ -104,19 +104,24 @@ describe('useUpload', () => {
   })
 
   test('limit file type', async () => {
-    const { files, append } = useUpload({ url: '#', accept: 'image/*' })
+    const { files, append } = useUpload({
+      url: '#',
+      accept: 'image/*,text/plain',
+    })
 
     await append(new File([''], 'image-jpg.jpg', { type: 'image/jpg' }))
     await append(new File([''], 'image-png1.png', { type: 'image/png' }))
     expect(
       append(new File([''], 'image-png2.png', { type: '.png' }))
     ).rejects.toThrow('Invalid file type.')
+    await append(new File([''], 'file1.txt', { type: 'text/plain' }))
     expect(
-      append(new File([''], 'file1.txt', { type: 'text/plain' }))
+      append(new File([''], 'video.mp4', { type: 'video/mp4' }))
     ).rejects.toThrow('Invalid file type.')
     expect(files.value.map((file) => file.name)).toEqual([
       'image-jpg',
       'image-png1',
+      'file1',
     ])
 
     const { files: files2, append: append2 } = useUpload({
@@ -126,7 +131,9 @@ describe('useUpload', () => {
     expect(
       append2(new File([''], 'image-jpg.jpg', { type: 'image/jpg' }))
     ).rejects.toThrow('Invalid file type.')
-    expect(append2(new File([''], 'image-png1.png', { type: 'image/png' }))).rejects.toThrow('Invalid file type.')
+    expect(
+      append2(new File([''], 'image-png1.png', { type: 'image/png' }))
+    ).rejects.toThrow('Invalid file type.')
   })
 
   test('max-count', async () => {
