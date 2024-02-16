@@ -4,7 +4,6 @@ import { ref, type Ref } from 'vue'
  * TODO:
  * - [ ] 允许并发上传数量，默认1
  * - [ ] 允许设置失败重传次数，默认0
- * - [ ] 清空文件列表 remove(index: number)
  */
 
 interface UseUploadOptions {
@@ -26,7 +25,7 @@ interface UseUploadFile {
 interface UseUploadReturn {
   files: Ref<UseUploadFile[]>
   append: (file: File | File[]) => void
-  upload: (index: number | number[]) => void
+  upload: (index?: number | number[]) => void
   remove: (index: number | number[]) => UseUploadFile[]
 }
 

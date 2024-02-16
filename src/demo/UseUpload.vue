@@ -19,5 +19,5 @@ const inputChange = (event) => {
   <br />
   <input accept="" type="file" @change="inputChange" multiple />
   <br />
-  <button @click="upload">upload</button>
+  <button @click="upload()">upload</button>
 </template>
