@@ -108,6 +108,9 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
     if (!(appendFiles as File[]).every(validFileType)) {
       throw new Error('Have some File reject')
     }
+    if (!(appendFiles as File[]).every((f) => f.size <= maxSize)) { 
+      throw new Error('Have some File size exceed')
+    }
 
     files.value = [
       ...files.value,
