@@ -1,11 +1,10 @@
-import { ref } from 'vue'
+import { ref, type Ref } from 'vue'
 
 /**
  * TODO:
  * - [ ] 允许并发上传数量，默认1
  * - [ ] 允许设置失败重传次数，默认0
- * - [ ] 限制可上传的文件大小，默认Infinity表示不限制
- * - [ ] 清空文件列表 delete(index: number)
+ * - [ ] 清空文件列表 remove(index: number)
  */
 
 interface UseUploadOptions {
@@ -28,7 +27,7 @@ interface UseUploadReturn {
   upload: () => void
   append: (file: File | File[]) => void
   clearFiles: () => boolean
-  remove: (index: number[]) => boolean
+  remove: (index: number[] | number) => UseUploadFile[]
   files: Ref<UseUploadFile[]>
 }
 
@@ -125,10 +124,19 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
     ]
   }
 
-  const remove = (index: number[] | number): UseUploadFile[] => {
-    if (index >= files.value.length) {
-      console.warn('cannot find file by index.')
-      return false
+  const remove = (index: number | number[]): UseUploadFile[] => {
+    let removeIndexes = []
+    if (Array.isArray(index)) {
+      removeIndexes = index
+    } else {
+      removeIndexes = [index]
+    }
+    if (
+      !removeIndexes.every((i) => {
+        return i < files.value.length
+      })
+    ) {
+      throw new Error('Have a index out of range.')
     }
     if (Array.isArray(index)) {
       const removeFiles = files.value.filter((_, i) => index.includes(i))
@@ -138,16 +146,10 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
     return files.value.splice(index, 1)
   }
 
-  const clear = (): boolean => {
-    files.value = []
-    return true
-  }
-
   return {
     upload,
     files,
     append,
     remove,
-    clear,
   }
 }
