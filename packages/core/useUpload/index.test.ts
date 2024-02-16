@@ -118,6 +118,15 @@ describe('useUpload', () => {
       'image-jpg',
       'image-png1',
     ])
+
+    const { files: files2, append: append2 } = useUpload({
+      url: '#',
+      accept: '.png',
+    })
+    expect(
+      append2(new File([''], 'image-jpg.jpg', { type: 'image/jpg' }))
+    ).rejects.toThrow('Invalid file type.')
+    expect(append2(new File([''], 'image-png1.png', { type: 'image/png' }))).rejects.toThrow('Invalid file type.')
   })
 
   test('max-count', async () => {

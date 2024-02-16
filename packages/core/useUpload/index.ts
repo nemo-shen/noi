@@ -107,10 +107,8 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
 
   const append = async (file: File | File[] | FileList) => {
     let appendFiles = []
-    if (file instanceof FileList) {
+    if ('length' in file) {
       appendFiles = Array.from(file)
-    } else if (Array.isArray(file)) {
-      appendFiles = file
     } else if (file instanceof File) {
       appendFiles = [file]
     }
