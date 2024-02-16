@@ -10,8 +10,9 @@ import { ref } from 'vue'
 
 interface UseUploadOptions {
   url: string
-  multiple?: boolean
   accept?: string
+  maxSize?: number // default infinity
+  maxCount?: number // default inifinity
 }
 
 interface UseUploadFile {
@@ -72,7 +73,7 @@ const genUploadFile = async (file: File): UseUploadFile => ({
 })
 
 export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
-  const { url, multiple = false, accept = '' } = options
+  const { url, accept = '', maxSize = Infinity, maxCount = Infinity } = options
   const acceptList = accept.split(',').map((type) => type.trim())
   const files = ref<UseUploadFile[]>([])
 
@@ -97,26 +98,31 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
     })
   }
 
-  const append = async (file: File | File[]) => {
-    if (!multiple && Array.isArray(file)) {
-      console.warn(
-        'if you want upload multiple files, set options multiple is `true`'
-      )
-    }
-    if (multiple) {
-      if (!(file as File[]).every(validFileType)) {
-        throw new Error('Have some File reject')
-      }
-      files.value = [
-        ...files.value,
-        ...(await (file as File[]).map(async (f) => genUploadFile(f))),
-      ]
+  const append = async (file: File | File[] | FileList) => {
+    let appendFiles = []
+    if (file instanceof FileList) {
+      appendFiles = Array.from(file)
+    } else if (Array.isArray(file)) {
+      appendFiles = file
+    } else if (file instanceof File) {
+      appendFiles = [file]
     } else {
-      if (!validFileType(file as File)) {
-        throw new Error('File type reject.')
-      }
-      files.value.push(await genUploadFile(file))
+      // nothing
     }
+    // check max size
+    if (files.value.length + appendFiles.length >= maxCount) {
+      throw new Error('Exceed the maximum number of files')
+    }
+    if (!(appendFiles as File[]).every(validFileType)) {
+      throw new Error('Have some File reject')
+    }
+
+    files.value = [
+      ...files.value,
+      ...(await Promise.all(
+        (appendFiles as File[]).map(async (f) => genUploadFile(f))
+      )),
+    ]
   }
 
   const remove = (index: number[] | number): UseUploadFile[] => {
