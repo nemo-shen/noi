@@ -24,7 +24,7 @@ interface UseUploadFile {
 
 interface UseUploadReturn {
   files: Ref<UseUploadFile[]>
-  append: (file: File | File[]) => void
+  append: (file: File | File[]) => Promise<void>
   upload: (index?: number | number[]) => void
   remove: (index: number | number[]) => UseUploadFile[]
 }
@@ -70,11 +70,26 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
   const files = ref<UseUploadFile[]>([])
 
   const upload = (index?: number | number[]) => {
-    files.value.forEach(({ file }, index) => {
-      uploadFile({ url }, file).then((_result) => {
-        files.value[index].status = 'success'
+    if (index) {
+      let uploadIndexes = []
+      if (Array.isArray(index)) {
+        uploadIndexes = index
+      } else {
+        uploadIndexes = [index]
+      }
+      files.value.forEach((file, index) => {
+        if (!uploadIndexes.includes(index)) return
+        uploadFile({ url }, file.file).then((_result) => {
+          file.status = 'success'
+        })
       })
-    })
+    } else {
+      files.value.forEach((file, index) => {
+        uploadFile({ url }, file.file).then((_result) => {
+          file.status = 'success'
+        })
+      })
+    }
   }
 
   const validFileType = (file: File) => {
@@ -102,14 +117,14 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
       // nothing
     }
     // check max size
-    if (files.value.length + appendFiles.length >= maxCount) {
-      throw new Error('Exceed the maximum number of files')
+    if (files.value.length + appendFiles.length > maxCount) {
+      throw new Error('Exceed the maximum number of files.')
     }
     if (!(appendFiles as File[]).every(validFileType)) {
-      throw new Error('Have some File reject')
+      throw new Error('Invalid file type.')
     }
-    if (!(appendFiles as File[]).every((f) => f.size <= maxSize)) { 
-      throw new Error('Have some File size exceed')
+    if (!(appendFiles as File[]).every((f) => f.size <= maxSize)) {
+      throw new Error('Have some File size exceed.')
     }
 
     files.value = [
@@ -143,8 +158,8 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
   }
 
   return {
-    upload,
     files,
+    upload,
     append,
     remove,
   }
