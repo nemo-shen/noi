@@ -11,32 +11,29 @@ interface UseUploadOptions {
   url: string
   accept?: string
   maxSize?: number // default infinity
-  maxCount?: number // default inifinity
+  maxCount?: number // default infinity
 }
 
 interface UseUploadFile {
   file: File
   name: string
   ext: string
-  url: string
+  data: string | ArrayBuffer
   status: 'ready' | 'uploading' | 'success' | 'error'
   error?: Error
 }
 
 interface UseUploadReturn {
-  upload: () => void
-  append: (file: File | File[]) => void
-  clearFiles: () => boolean
-  remove: (index: number[] | number) => UseUploadFile[]
   files: Ref<UseUploadFile[]>
+  append: (file: File | File[]) => void
+  upload: (index: number | number[]) => void
+  remove: (index: number | number[]) => UseUploadFile[]
 }
 
 interface UploadOptions {
   url: string
   headers?: []
   method?: string
-  maxCount: number // default Infinity
-  maxSize: number // default Infinity
 }
 
 // 文件类型默认是 formData 格式，如果是其他的格式需要根据 ContentType 进行处理
@@ -51,9 +48,7 @@ const uploadFile = (options: UploadOptions, file: File) => {
   })
 }
 
-type Base64 = string
-
-const useFileReader = (file: File): Promise<Base64> =>
+const useFileReader = (file: File): Promise<string | ArrayBuffer> =>
   new Promise((resolve) => {
     const reader = new FileReader()
     reader.onload = (e) => {
@@ -62,12 +57,11 @@ const useFileReader = (file: File): Promise<Base64> =>
     reader.readAsDataURL(file)
   })
 
-const genUploadFile = async (file: File): UseUploadFile => ({
+const genUploadFile = async (file: File): Promise<UseUploadFile> => ({
   file,
   name: file.name.split('.')[0],
   ext: file.name.split('.')[1],
   data: await useFileReader(file),
-  url: '',
   status: 'ready',
 })
 
@@ -76,8 +70,8 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
   const acceptList = accept.split(',').map((type) => type.trim())
   const files = ref<UseUploadFile[]>([])
 
-  const upload = () => {
-    files.value.forEach((file, index) => {
+  const upload = (index?: number | number[]) => {
+    files.value.forEach(({ file }, index) => {
       uploadFile({ url }, file).then((_result) => {
         files.value[index].status = 'success'
       })
