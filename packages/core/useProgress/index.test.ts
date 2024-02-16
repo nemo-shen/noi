@@ -2,7 +2,7 @@ import { vi, describe, expect, test } from 'vitest'
 import { useProgress } from '.'
 import { wait } from '../utils'
 
-describe('useEllipsis', () => {
+describe('useProgress', () => {
   test('should be defined', () => {
     expect(useProgress).toBeDefined()
   })
