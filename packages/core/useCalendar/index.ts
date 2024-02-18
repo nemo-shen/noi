@@ -1,4 +1,4 @@
-import { ref, computed, type Ref } from 'vue'
+import { ref, computed } from 'vue'
 /**
  * 1. 首先需要初始化一个日历给开发者
  * 2. minDate 默认当月1号
@@ -73,6 +73,9 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
   const selectedDate = ref<SelectedDate<SelectType>>()
 
   const setSelectDate = (value: Date) => {
+    const size = selectedDate.value
+      ? (selectedDate.value as SelectedDate<'range'>).length
+      : 0
     switch (selectType) {
       case 'single':
         selectedDate.value = value
@@ -87,9 +90,6 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
         }
         break
       case 'range':
-        // 0 1 2
-        const size = selectedDate.value ? (selectedDate.value as SelectedDate<'range'>).length : 0
-        console.log(size);
         if (size === 0 || size === 2) {
           selectedDate.value = [value]
         } else {
@@ -171,7 +171,7 @@ export const useCalendar = (options: UseCalendarOptions = {}) => {
       return now === selectDate
     }
     if (selectType === 'multiple') {
-      return (selectedDate.value as Date[]).includes((sd) => {
+      return (selectedDate.value as Date[]).some((sd) => {
         const selectDateTime = Math.floor(sd.getTime() / daySeconds)
         return now === selectDateTime
       })
