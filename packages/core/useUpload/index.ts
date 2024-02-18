@@ -77,16 +77,16 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
       } else {
         uploadIndexes = [index]
       }
-      files.value.forEach((file, index) => {
+      files.value.forEach((file: UseUploadFile, fileIndex) => {
         if (!uploadIndexes.includes(index)) return
         uploadFile({ url }, file.file).then((_result) => {
-          file.status = 'success'
+          files.value[fileIndex].status = 'success'
         })
       })
     } else {
-      files.value.forEach((file, index) => {
+      files.value.forEach((file, fileIndex) => {
         uploadFile({ url }, file.file).then((_result) => {
-          file.status = 'success'
+          files.value[fileIndex].status = 'success'
         })
       })
     }
@@ -139,9 +139,9 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
       removeIndexes = [index]
     }
     if (
-      !removeIndexes.every((i) => {
-        return i < files.value.length
-      })
+      !removeIndexes.every((i) => 
+        i < files.value.length
+      )
     ) {
       throw new Error('Index out of range.')
     }
