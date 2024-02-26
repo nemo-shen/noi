@@ -4,7 +4,8 @@
 // import UseProgress from './demo/UseProgress.vue'
 // import UseCalendar from './demo/UseCalendar.vue'
 // import UseCountdown from './demo/UseCountdown.vue'
-import UseUpload from './demo/UseUpload.vue'
+// import UseUpload from './demo/UseUpload.vue'
+import UsePagination from './demo/UsePagination.vue'
 </script>
 
 <template>
@@ -13,5 +14,6 @@ import UseUpload from './demo/UseUpload.vue'
   <!-- <UseProgress /> -->
   <!-- <UseCalendar /> -->
   <!-- <UseCountdown /> -->
-  <UseUpload />
+  <!-- <UseUpload /> -->
+  <UsePagination />
 </template>
