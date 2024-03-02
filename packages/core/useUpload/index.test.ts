@@ -124,7 +124,7 @@ describe('useUpload', () => {
       'file1',
     ])
 
-    const { files: files2, append: append2 } = useUpload({
+    const { append: append2 } = useUpload({
       url: '#',
       accept: '.png',
     })
@@ -137,7 +137,7 @@ describe('useUpload', () => {
   })
 
   test('max-count', async () => {
-    const { files, append } = useUpload({ url: '#', maxCount: 1 })
+    const { append } = useUpload({ url: '#', maxCount: 1 })
     expect(
       append([new File([], 'file1.txt'), new File([], 'file2.txt')])
     ).rejects.toThrow('Exceed the maximum number of files.')

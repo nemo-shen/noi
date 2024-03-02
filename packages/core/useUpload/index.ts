@@ -78,7 +78,7 @@ export const useUpload = (options: UseUploadOptions): UseUploadReturn => {
         uploadIndexes = [index]
       }
       files.value.forEach((file: UseUploadFile, fileIndex) => {
-        if (!uploadIndexes.includes(index)) return
+        if (!uploadIndexes.includes(fileIndex)) return
         uploadFile({ url }, file.file).then((_result) => {
           files.value[fileIndex].status = 'success'
         })
