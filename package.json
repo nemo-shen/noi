@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@noi/core": "workspace:*",
-    "@vueuse/core": "^10.7.2",
+    "@vueuse/core": "^10.9.0",
     "@vueuse/motion": "^2.1.0",
     "vue": "^3.4.21"
   },
