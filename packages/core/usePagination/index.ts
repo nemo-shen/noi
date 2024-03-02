@@ -1,10 +1,10 @@
 import { ref, computed, type ComputedRef, type Ref } from 'vue'
 
 interface PageItem {
-  text: string | number;
+  text: string | number
   value: number
   isCurrent: boolean
-  type: 'page' | 'ellipsis'
+  type: 'page'
 }
 
 interface UsePaginationOption {
@@ -12,7 +12,6 @@ interface UsePaginationOption {
   pageSize?: number
   currentPage?: number
   maxPageCount?: number
-  ellipsis?: boolean
 }
 
 interface UsePaginationReturn {
@@ -32,7 +31,7 @@ interface UsePaginationReturn {
 export const usePagination = (
   options: UsePaginationOption
 ): UsePaginationReturn => {
-  const { total, ellipsis = false } = options
+  const { total } = options
 
   const currentPage = ref(options.currentPage || 1)
   const pageSize = ref(options.pageSize || 10)
@@ -44,49 +43,12 @@ export const usePagination = (
       : options.maxPageCount || 5
   const isLastPage = computed(() => currentPage.value === totalPage.value)
   const pages = computed(() =>
-    Array.from({ length: maxPageCount }, (_, index) => {
-      if (!ellipsis) {
-        return {
-          text: index + 1,
-          value: index + 1,
-          isCurrent: index + 1 === currentPage.value,
-          type: 'page',
-        } as PageItem
-      }
-      if (maxPageCount % 2 === 0) {
-        if (
-          index + 1 <= maxPageCount / 2 ||
-          totalPage.value - (index + 1) < maxPageCount / 2
-        ) {
-          return {
-            text: index + 1,
-            value: index + 1,
-            isCurrent: index + 1 === currentPage.value,
-            type: 'page',
-          } as PageItem
-        }
-        return {
-          text: '...',
-          value: 0,
-          isCurrent: false,
-          type: 'ellipsis',
-        } as PageItem
-      }
-      if (Math.floor(maxPageCount / 2) + 1 === index + 1) {
-        return {
-          text: '...',
-          value: 0,
-          isCurrent: false,
-          type: 'ellipsis',
-        } as PageItem
-      }
-      return {
+    Array.from({ length: maxPageCount }, (_, index) => ({
         text: index + 1,
         value: index + 1,
         isCurrent: index + 1 === currentPage.value,
         type: 'page',
-      } as PageItem
-    })
+      } as PageItem))
   )
 
   const gotoPage = (page: number) => {

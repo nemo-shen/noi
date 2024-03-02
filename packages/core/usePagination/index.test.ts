@@ -30,16 +30,6 @@ describe('usePagination', () => {
     expect(pages.value.length).toEqual(3)
   })
 
-  test('ellipsis', () => {
-    const { pages } = usePagination({
-      total: 10,
-      pageSize: 1,
-      maxPageCount: 3,
-      ellipsis: true,
-    })
-    expect(pages.value[1].text).toEqual('...')
-  })
-
   test('currentPage', () => {
     const { currentPage, nextPage } = usePagination({
       total: 5,
