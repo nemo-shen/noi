@@ -61,8 +61,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1(eslint@7.32.0)
       eslint-plugin-vue:
-        specifier: ^9.22.0
-        version: 9.22.0(eslint@7.32.0)
+        specifier: ^9.24.0
+        version: 9.24.0(eslint@7.32.0)
       happy-dom:
         specifier: ^12.10.3
         version: 12.10.3
@@ -2212,14 +2212,15 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-vue@9.22.0(eslint@7.32.0):
-    resolution: {integrity: sha512-7wCXv5zuVnBtZE/74z4yZ0CM8AjH6bk4MQGm7hZjUC2DBppKU5ioeOk5LGSg/s9a1ZJnIsdPLJpXnu1Rc+cVHg==}
+  /eslint-plugin-vue@9.24.0(eslint@7.32.0):
+    resolution: {integrity: sha512-9SkJMvF8NGMT9aQCwFc5rj8Wo1XWSMSHk36i7ZwdI614BU7sIOR28ZjuFPKp8YGymZN12BSEbiSwa7qikp+PBw==}
     engines: {node: ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.2.0 || ^7.0.0 || ^8.0.0
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@7.32.0)
       eslint: 7.32.0
+      globals: 13.24.0
       natural-compare: 1.4.0
       nth-check: 2.1.1
       postcss-selector-parser: 6.0.15
