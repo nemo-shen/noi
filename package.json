@@ -50,7 +50,7 @@
     "eslint-plugin-markdown": "^3.0.1",
     "eslint-plugin-vue": "^9.24.0",
     "happy-dom": "^12.10.3",
-    "lint-staged": "^15.2.0",
+    "lint-staged": "^15.2.10",
     "postcss": "^8.4.35",
     "prettier": "3.2.4",
     "simple-git-hooks": "^2.11.1",
